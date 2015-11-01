@@ -25,8 +25,8 @@ import javax.swing.UIManager;
  */
 public class MainClass extends JApplet {
     
-    private static final int JFXPANEL_WIDTH_INT = 300;
-    private static final int JFXPANEL_HEIGHT_INT = 250;
+    private static final int JFXPANEL_WIDTH_INT = 1024;
+    private static final int JFXPANEL_HEIGHT_INT = 600;
     private static JFXPanel fxContainer;
 
     /**
@@ -42,7 +42,7 @@ public class MainClass extends JApplet {
                 } catch (Exception e) {
                 }
                 
-                JFrame frame = new JFrame("JavaFX 2 in Swing");
+                JFrame frame = new JFrame("Tema RC Client");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 
                 JApplet applet = new MainClass();
@@ -75,18 +75,7 @@ public class MainClass extends JApplet {
     }
     
     private void createScene() {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        fxContainer.setScene(new Scene(root));
+
     }
     
 }

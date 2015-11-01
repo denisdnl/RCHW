@@ -1,2 +1,6 @@
 /client/RCClient/nbproject/private/
 /server/RCServer/nbproject/private/
+/server/RCServer/build/
+/server/RCServer/dist/
+/client/RCClient/build/
+/client/RCClient/dist/
