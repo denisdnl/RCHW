@@ -17,7 +17,7 @@ public class MouseLeftClickModel {
     public RawDataModel toRawData(){
         RawDataModel result = new RawDataModel();
         
-        ByteBuffer data = ByteBuffer.allocate(6);
+        ByteBuffer data = ByteBuffer.allocate(1+1+8);
         data.put(ActionCodes.HEADER_START);
         data.put(ActionCodes.LEFT_CLICK);
         data.putLong(0); //0 bytes of payload data since more infos are not important
