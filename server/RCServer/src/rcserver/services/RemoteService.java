@@ -30,7 +30,7 @@ public class RemoteService implements Runnable {
     private static ServerSocket serverSocket;
     private static Thread thread;
     public static boolean isStarted = false;
-    public static final int PORT = 500031;
+    public static final int PORT = 353;
     private static SocketChannel socketChannel = null;
     
     private static RemoteMachineRecieveCallback recieveCallback;
@@ -46,6 +46,7 @@ public class RemoteService implements Runnable {
                     newClient = serverSocket.accept();
                     socketChannel = newClient.getChannel();
                     isConnected = true;
+                    recieveCallback.onConnect();
                     System.out.println("CONNECTED!");
                 } catch (IOException ex) {
                     Logger.getLogger(RemoteService.class.getName()).log(Level.SEVERE, null, ex);
@@ -53,6 +54,7 @@ public class RemoteService implements Runnable {
             }
             if(newClient == null || !newClient.isConnected()) {
                 isConnected = false;
+                recieveCallback.onDisconnect();
                 System.out.println("DISCONNECTED!");
             } else {
                 ByteBuffer header = ByteBuffer.allocate(1);
@@ -113,7 +115,9 @@ public class RemoteService implements Runnable {
     public void init(RemoteMachineRecieveCallback tcpcallback, InetAddress listenAddress) throws IOException {
         recieveCallback = tcpcallback;
         if(serverSocket == null) {
-            serverSocket = new ServerSocket(PORT, 10, listenAddress);
+            InetAddress bullshit;
+            bullshit = InetAddress.getLocalHost();
+            serverSocket = new ServerSocket(PORT, 10, bullshit);
         }
         
         if(thread == null)

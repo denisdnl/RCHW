@@ -60,6 +60,7 @@ public class MainClass extends JApplet {
 
     static LocalInterfaceModel currentInterface;
     static JComboBox interfaceCombo;
+    static JLabel statusLabel;
     
     /**
      * @param args the command line arguments
@@ -115,7 +116,7 @@ public class MainClass extends JApplet {
             
             private void addGUIListeners(MainPanel mainPanel) {
                 Component[] comps = mainPanel.getComponents();
-                final JLabel statusLabel = (JLabel)comps[2];
+                statusLabel = (JLabel)comps[2];
                 final JLabel myIPLabel = (JLabel)comps[1];
                 final JButton stopButton = (JButton)comps[4];
                 final JButton startButton = (JButton)comps[3];
@@ -205,6 +206,16 @@ public class MainClass extends JApplet {
 
                     @Override
                     public void onScroll(MouseScrollModel mouseScroll) {
+                    }
+
+                    @Override
+                    public void onConnect() {
+                        statusLabel.setText("Connected!");
+                    }
+
+                    @Override
+                    public void onDisconnect() {
+                        statusLabel.setText("Disconnected!");
                     }
                     
                 };      

@@ -21,4 +21,6 @@ public abstract class RemoteMachineRecieveCallback {
     public abstract void onLeftClick(MouseLeftClickModel mouseLeftClick); 
     public abstract void onRightClick(MouseRightClickModel mouseRightClick);
     public abstract void onScroll(MouseScrollModel mouseScroll);
+    public abstract void onConnect();
+    public abstract void onDisconnect();
 }

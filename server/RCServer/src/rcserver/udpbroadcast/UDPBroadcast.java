@@ -6,6 +6,7 @@
 package rcserver.udpbroadcast;
 
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -61,7 +62,11 @@ public class UDPBroadcast implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(UDPBroadcast.class.getName()).log(Level.SEVERE, null, ex);
             }
-          
+            try {
+                sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(UDPBroadcast.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
