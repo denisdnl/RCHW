@@ -48,13 +48,13 @@ public class UDPBroadcastListener implements Runnable{
         while(true)
         {
             try {
-                byte[] data = new byte[1];
-                DatagramPacket p = new DatagramPacket(data,1);
+                byte[] data = new byte[16];
+                DatagramPacket p = new DatagramPacket(data,16);
                 socket.receive(p);
-                if(data[0] == ActionCodes.PING){
-                   String ipAddr = p.getAddress().getHostAddress();
-                   callback.onFound(ipAddr);
-                }
+                String name = new String(p.getData());
+                String ipAddr = p.getAddress().getHostAddress();
+                callback.onFound(ipAddr + " " + name);
+                
             } catch (IOException ex) {
                 Logger.getLogger(UDPBroadcastListener.class.getName()).log(Level.SEVERE, null, ex);
             }

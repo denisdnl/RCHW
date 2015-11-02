@@ -18,5 +18,4 @@ public class ActionCodes {
     public static final byte KEY_STROKE = 5;
     public static final byte GET_RESOLUTION = 6;
     public static final byte GET_SCREEN = 7;
-    public static final byte PING = 8;
 }
