@@ -128,9 +128,7 @@ public class RemoteService implements Runnable {
     }
     
     public void stop() throws IOException{
-        if(remoteSocket.isConnected())
-            remoteSocket.close();
-        
+        remoteSocket.close();
         thread.interrupt();
         isStarted = false;
     }

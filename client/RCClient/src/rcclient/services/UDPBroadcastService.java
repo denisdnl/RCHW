@@ -8,9 +8,12 @@ package rcclient.services;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rcclient.codes.ActionCodes;
@@ -21,14 +24,14 @@ import utilities.RemoteMachineBroadcastCallback;
  * @author Deni-W7
  */
 public class UDPBroadcastService implements Runnable{
-    public static final int PORT = 50010;
+    public static final int PORT = 50020;
     private static DatagramSocket socket;
     private static Thread thread;
     private static RemoteMachineBroadcastCallback callback;
     
     public void singletonInit(RemoteMachineBroadcastCallback callback) throws SocketException{
         
-        this.callback = callback;
+           this.callback = callback;
         if(socket == null){
             socket = new DatagramSocket(PORT);
             /*SocketAddress addr = new InetSocketAddress(PORT);
