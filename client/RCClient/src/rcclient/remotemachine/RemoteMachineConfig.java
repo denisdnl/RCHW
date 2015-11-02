@@ -5,6 +5,8 @@
  */
 package rcclient.remotemachine;
 
+import java.awt.Image;
+
 /**
  *
  * @author Deni-W7
@@ -13,4 +15,5 @@ public class RemoteMachineConfig {
     public static String IP;
     public static int SCREEN_WIDTH = 1366;
     public static int SCREEN_HEIGHT = 768;
+    public static Image SCREEN;
 }

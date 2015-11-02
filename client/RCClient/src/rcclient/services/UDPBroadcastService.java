@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rcclient.udplistener;
+package rcclient.services;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,13 +14,13 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rcclient.codes.ActionCodes;
-import rcclient.models.RemoteMachineBroadcastCallback;
+import utilities.RemoteMachineBroadcastCallback;
 
 /**
  *
  * @author Deni-W7
  */
-public class UDPBroadcastListener implements Runnable{
+public class UDPBroadcastService implements Runnable{
     public static final int PORT = 50010;
     private static DatagramSocket socket;
     private static Thread thread;
@@ -29,17 +29,15 @@ public class UDPBroadcastListener implements Runnable{
     public void singletonInit(RemoteMachineBroadcastCallback callback) throws SocketException{
         
         this.callback = callback;
-        if(socket == null)
-            socket = new DatagramSocket();
-        if(!socket.isBound())
-        {   
-            SocketAddress addr = new InetSocketAddress(PORT);
-            socket.bind(addr);
+        if(socket == null){
+            socket = new DatagramSocket(PORT);
+            /*SocketAddress addr = new InetSocketAddress(PORT);
+            socket.bind(addr);*/
         }
         if(thread == null){
             thread = new Thread(this);
         }
-        if(thread.isInterrupted())
+        if(!thread.isAlive())
             thread.start();
     }
 
@@ -56,7 +54,7 @@ public class UDPBroadcastListener implements Runnable{
                 callback.onFound(ipAddr + " " + name);
                 
             } catch (IOException ex) {
-                Logger.getLogger(UDPBroadcastListener.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UDPBroadcastService.class.getName()).log(Level.SEVERE, null, ex);
             }
           
         }
