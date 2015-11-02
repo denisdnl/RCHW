@@ -13,6 +13,8 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,19 +31,26 @@ import javafx.scene.layout.StackPane;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import rcclient.models.KeyboardStrokeModel;
 import rcclient.models.MouseLeftClickModel;
 import rcclient.models.MouseRightClickModel;
 import rcclient.models.MouseScrollModel;
+import rcclient.models.RemoteMachineBroadcastCallback;
 import rcclient.panels.MainPanel;
 import rcclient.remotemachine.RemoteMachineConfig;
 import rcclient.services.MouseLocationService;
 import rcclient.services.RemoteService;
+import rcclient.udplistener.FoundRemoteList;
 
 /**
  *
@@ -53,6 +62,7 @@ public class MainClass extends JApplet {
     private static final int JFXPANEL_HEIGHT_INT = 600;
     private static JFXPanel fxContainer;
     private static JFrame frame;
+    private static MainPanel mainPanel;
     /**
      * @param args the command line arguments
      */
@@ -72,10 +82,10 @@ public class MainClass extends JApplet {
                 JApplet applet = new MainClass();
                 applet.init();
                 frame.setFocusable(true);
-                MainPanel mainPanel = new MainPanel();
+                mainPanel = new MainPanel();
                 mainPanel.setFocusable(true);
                 
-                addListeners(mainPanel);
+                addGUIListeners(mainPanel);
                 frame.setContentPane(applet.getContentPane());
                 frame.getContentPane().add(mainPanel);
                 frame.pack();
@@ -83,9 +93,13 @@ public class MainClass extends JApplet {
                 frame.setVisible(true);
 
                 applet.start();
+                
+                FoundRemoteList list = new FoundRemoteList();
+                addUDPListener();
             }
-
-            private void addListeners(MainPanel mainPanel) {
+            
+            
+            private void addGUIListeners(MainPanel mainPanel) {
       
                 
                 Component[] comps = mainPanel.getComponents();
@@ -94,8 +108,17 @@ public class MainClass extends JApplet {
                 final JCheckBox cbox = (JCheckBox) (((JPanel)comps[1]).getComponents()[4]);
                 final JButton cbtn = (JButton)(((JPanel)comps[1]).getComponents()[2]);
                 final JButton dbtn = (JButton)(((JPanel)comps[1]).getComponents()[3]);
-                
-                
+      
+                final JComboBox combobox = (JComboBox)(((JPanel)comps[1]).getComponents()[5]);
+                combobox.removeAllItems();
+                combobox.addItemListener( new ItemListener(){
+
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                      if(e.getStateChange() == ItemEvent.SELECTED)
+                          ipTf.setText(e.getItem().toString());
+                    }
+                });
                 cbtn.addMouseListener(new MouseListener(){
 
                     @Override
@@ -203,6 +226,22 @@ public class MainClass extends JApplet {
                     }
                 });
 
+            }
+
+            private void addUDPListener() {
+                RemoteMachineBroadcastCallback callback = new RemoteMachineBroadcastCallback(){
+
+                    @Override
+                    public void onFound(String ip) {
+                        if(!FoundRemoteList.hosts.contains(ip)){
+                            FoundRemoteList.hosts.add(ip);
+                            final JComboBox combobox = (JComboBox)(((JPanel)mainPanel.getComponent(1)).getComponents()[5]);
+                           combobox.addItem(ip);
+                        }
+                        
+                    }
+                    
+                };          
             }
         });
 
