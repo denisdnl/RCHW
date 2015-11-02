@@ -6,6 +6,8 @@
 package rcserver.services;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -30,8 +32,10 @@ public class RemoteService implements Runnable {
     private static ServerSocket serverSocket;
     private static Thread thread;
     public static boolean isStarted = false;
-    public static final int PORT = 353;
-    private static SocketChannel socketChannel = null;
+    public static final int PORT = 50031;
+//    private static SocketChannel socketChannel = null;
+    private static InputStream inputStream;
+    private static OutputStream outputStream;
     
     private static RemoteMachineRecieveCallback recieveCallback;
 
@@ -44,7 +48,9 @@ public class RemoteService implements Runnable {
             if(!isConnected) {
                 try {
                     newClient = serverSocket.accept();
-                    socketChannel = newClient.getChannel();
+//                    socketChannel = newClient.getChannel();
+                    inputStream = newClient.getInputStream();
+                    outputStream = newClient.getOutputStream();
                     isConnected = true;
                     recieveCallback.onConnect();
                     System.out.println("CONNECTED!");
@@ -57,18 +63,29 @@ public class RemoteService implements Runnable {
                 recieveCallback.onDisconnect();
                 System.out.println("DISCONNECTED!");
             } else {
-                ByteBuffer header = ByteBuffer.allocate(1);
+                byte[] header = new byte[1];
                 try {
-                    socketChannel.read(header);
-                    if(header.get() == ActionCodes.HEADER_START) {
+//                    socketChannel.read(header);
+                    inputStream.read(header);
+                    if(header[0] == ActionCodes.HEADER_START) {
                         //yay, got data!
-                        ByteBuffer actionBuff = ByteBuffer.allocate(1);
-                        socketChannel.read(actionBuff);
-                        ByteBuffer lengthBuff = ByteBuffer.allocate(8);
-                        socketChannel.read(lengthBuff);
-                        long length = lengthBuff.getLong();
-                        ByteBuffer data = ByteBuffer.allocate((int) length);
-                        socketChannel.read(data);
+//                        ByteBuffer actionBuff = ByteBuffer.allocate(1);
+//                        socketChannel.read(actionBuff);
+//                        ByteBuffer lengthBuff = ByteBuffer.allocate(8);
+//                        socketChannel.read(lengthBuff);
+//                        long length = lengthBuff.getLong();
+//                        ByteBuffer data = ByteBuffer.allocate((int) length);
+//                        socketChannel.read(data);
+                        
+                        byte[] actionBuff = new byte[1];
+                        inputStream.read(actionBuff);
+                        byte[] lengthBuff = new byte[8];
+                        inputStream.read(lengthBuff);
+                        ByteBuffer lengthAuxBuffer = ByteBuffer.allocate(8);
+                        lengthAuxBuffer.put(lengthBuff);
+                        long length = lengthAuxBuffer.getLong();
+                        byte[] data = new byte[(int)length];
+                        inputStream.read(data);
 
                         
                         RawDataModel model = new RawDataModel();
@@ -80,7 +97,7 @@ public class RemoteService implements Runnable {
                         buffer.put(data);
                         model.data = buffer.array();
                         
-                        byte action = actionBuff.get();
+                        byte action = actionBuff[0];
                         switch(action) {
                             case ActionCodes.CURSOR_LOC_UPDATE:
                                 MouseLocationModel mouseLoc = new MouseLocationModel(model);
@@ -115,9 +132,9 @@ public class RemoteService implements Runnable {
     public void init(RemoteMachineRecieveCallback tcpcallback, InetAddress listenAddress) throws IOException {
         recieveCallback = tcpcallback;
         if(serverSocket == null) {
-            InetAddress bullshit;
-            bullshit = InetAddress.getLocalHost();
-            serverSocket = new ServerSocket(PORT, 10, bullshit);
+//            InetAddress bullshit;
+//            bullshit = InetAddress.getLocalHost();
+            serverSocket = new ServerSocket(PORT, 10, listenAddress);
         }
         
         if(thread == null)

@@ -141,6 +141,11 @@ public class MainClass extends JApplet {
                         //@TODO handle clickey!
                         udpbroadcast.start(currentInterface.broadcastAddress, nameField.getText().toString());
                         statusLabel.setText("Broadcasting on UDP!");
+                        try {
+                            addTCPListener();
+                        } catch (IOException ex) {
+                            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                     @Override
@@ -165,6 +170,8 @@ public class MainClass extends JApplet {
                     public void mouseClicked(MouseEvent me) {
                         //@TODO handle clickey!
                         udpbroadcast.stop();
+                        tcpservice.stop();
+                        statusLabel.setText("Stopped!");
                     }
 
                     @Override
