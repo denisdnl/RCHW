@@ -14,6 +14,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -27,12 +28,20 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import rcserver.models.KeyboardStrokeModel;
 import rcserver.panels.MainPanel;
 import rcserver.udpbroadcast.UDPBroadcast;
 import rcserver.models.LocalInterfaceModel;
+import rcserver.models.MouseLeftClickModel;
+import rcserver.models.MouseLocationModel;
+import rcserver.models.MouseRightClickModel;
+import rcserver.models.MouseScrollModel;
+import rcserver.services.RemoteService;
+import utilities.RemoteMachineRecieveCallback;
 
 /**
  *
@@ -47,6 +56,7 @@ public class MainClass extends JApplet {
     private static MainPanel mainPanel;
     
     private static UDPBroadcast udpbroadcast;
+    private static RemoteService tcpservice;
 
     static LocalInterfaceModel currentInterface;
     static JComboBox interfaceCombo;
@@ -172,6 +182,38 @@ public class MainClass extends JApplet {
                     public void mouseExited(MouseEvent me) {
                     }
                 });
+            }
+            
+            private void addTCPListener() throws IOException {
+                RemoteMachineRecieveCallback callback = new RemoteMachineRecieveCallback() {
+                    @Override
+                    public void onCursorLocation(MouseLocationModel mouseLocation) {
+                    }
+
+                    @Override
+                    public void onKeyStroke(KeyboardStrokeModel keyStroke) {
+                    }
+
+                    @Override
+                    public void onLeftClick(MouseLeftClickModel mouseLeftClick) {
+                        System.out.println("CLICKLETYTTT!");
+                    }
+
+                    @Override
+                    public void onRightClick(MouseRightClickModel mouseRightClick) {
+                    }
+
+                    @Override
+                    public void onScroll(MouseScrollModel mouseScroll) {
+                    }
+                    
+                };      
+                tcpservice = new RemoteService();
+                try {
+                    tcpservice.start(callback, currentInterface.address);
+                } catch (SocketException ex) {
+                    Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
