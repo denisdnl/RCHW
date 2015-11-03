@@ -26,15 +26,15 @@ public class ScreenModel {
     }
     
     public ScreenModel(RawDataModel model) throws IOException{
-        ByteBuffer lengthbuffer = ByteBuffer.wrap(model.data,2,8);
-        long length = lengthbuffer.getLong();
-        ByteBuffer imagebuffer = ByteBuffer.wrap(model.data,10, (int) length);
+        ByteBuffer buff = ByteBuffer.wrap(model.data,2,8+(int)model.length);
+        long length = buff.getLong();
         byte [] data = new byte[(int)length];
-        imagebuffer.get(data);
+        buff.get(data);
         InputStream in = new ByteArrayInputStream(data);
 	bufferedBitmap = ImageIO.read(in);
         in.close();
         data = null; //Free memory
+        buff = null;
         in = null;
     }
     

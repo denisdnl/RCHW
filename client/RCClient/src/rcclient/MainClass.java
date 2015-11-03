@@ -209,8 +209,10 @@ public class MainClass extends JApplet {
 
                             @Override
                             public void onScreenUpdated(BufferedImage image) {
-                                  RemoteMachineConfig.SCREEN = image.getScaledInstance(panel1.getWidth(), panel1.getHeight(), 0);
-                                //  panel1.repaint();
+                                  //RemoteMachineConfig.SCREEN = image.getScaledInstance(panel1.getWidth(), panel1.getHeight(), 5);
+                                  RemoteMachineConfig.SCREEN = image;
+                                  panel1.repaint();
+                                  panel1.setSize(1020,600);
                             }
                         };
                         

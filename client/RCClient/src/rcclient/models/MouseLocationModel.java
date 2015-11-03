@@ -37,17 +37,19 @@ public class MouseLocationModel {
         
         ByteBuffer lengthbuffer = ByteBuffer.allocate(8);
         lengthbuffer.putLong(8);
-        data.put(lengthbuffer.array(),0,8);
+        data.put(lengthbuffer.array());
         
         
         ByteBuffer xbuffer = ByteBuffer.allocate(4);
         xbuffer.putInt(X);
-        data.put(lengthbuffer.array(),0,4);
+        xbuffer.position(0);
+        data.put(xbuffer.array());
         
         
         ByteBuffer ybuffer = ByteBuffer.allocate(4);
         ybuffer.putInt(Y);
-        data.put(lengthbuffer.array(),0,4);
+        ybuffer.position(0);
+        data.put(ybuffer.array());
         
         result.length = 8;//4-X + 4-Y
         result.data = data.array();

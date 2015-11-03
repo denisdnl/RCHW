@@ -22,7 +22,7 @@ public class ResolutionService extends TimerTask {
     public void init(){
         if(t == null)
             t = new Timer("resolutionTimer");
-    //    t.schedule(this, 1000, 10000);
+        t.schedule(this, 300, 10000);
     }
     
     @Override

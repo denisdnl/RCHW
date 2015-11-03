@@ -28,6 +28,7 @@ public class JPanelSmecher extends JPanel {
     protected void paintComponent(Graphics g) {
         
         super.paintComponent(g);
+        this.setSize(1020,600);
         if(RemoteMachineConfig.SCREEN != null)
         g.drawImage(RemoteMachineConfig.SCREEN, 0, 0, null);
     }

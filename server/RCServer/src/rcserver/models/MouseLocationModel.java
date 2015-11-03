@@ -24,7 +24,7 @@ public class MouseLocationModel {
     public MouseLocationModel(RawDataModel model){
         ByteBuffer xbuff = ByteBuffer.wrap(model.data, 10, 4);
         X = xbuff.getInt();
-        ByteBuffer ybuff = ByteBuffer.wrap(model.data,13,4);
+        ByteBuffer ybuff = ByteBuffer.wrap(model.data,14,4);
         Y = ybuff.getInt();
     }
     

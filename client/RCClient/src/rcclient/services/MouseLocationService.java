@@ -23,7 +23,7 @@ import utilities.ResolutionConverter;
 public class MouseLocationService {
 
     static Timer timer;
-    public static final int DELAY = 330;
+    public static final int DELAY = 250;
     public void singletonInit(final JPanel panel){
         if(timer != null)
             return;
@@ -37,9 +37,10 @@ public class MouseLocationService {
                SwingUtilities.convertPointFromScreen(p, panel);
                if(p.x>=0 && p.y>=0 && p.x<panel.getWidth() && p.y<panel.getHeight()){
                    ResolutionConverter.convertToRemoteRes(p, panel.getWidth(), panel.getHeight());
-                  
+                  if(p.x>0 && p.y>0){
                    MouseLocationModel model = new MouseLocationModel(p.x,p.y);
-                //   RemoteService.sendAction(model.toRawData());
+                   RemoteService.sendAction(model.toRawData());
+                  }
                     // System.out.println(p.x+" "+p.y);
                }
             }

@@ -39,7 +39,7 @@ public class RemoteService implements Runnable {
     private static RemoteResolutionCallback resCallback;
     private static InputStream inputStream;
     private static OutputStream outputStream;
-
+    byte[] data = new byte[300000];
     public static void sendAction(RawDataModel model) {
         if (!isStarted) {
             return;
@@ -119,16 +119,24 @@ public class RemoteService implements Runnable {
                         lengthBuff.put(lenbuf);
                         lengthBuff.position(0);
                         long length = lengthBuff.getLong();
-                        byte[] data = new byte[(int) length];
-                        inputStream.read(data);
-
+                        
+                        if(length < 0 || length > 300000) 
+                            continue;
+                        
+                        int totalDataBytes = 0;
+                        
+                        while(totalDataBytes<length){
+                        
+                            int rx = inputStream.read(data,totalDataBytes,(int)length-totalDataBytes);
+                            totalDataBytes += rx;
+                        }
                         RawDataModel model = new RawDataModel();
                         model.length = length;
                         ByteBuffer buffer = ByteBuffer.allocate((int) (1 + 1 + 8 + length));
                         buffer.put(header);
                         buffer.put(actionBuff);
                         buffer.put(lenbuf);
-                        buffer.put(data);
+                        buffer.put(data, 0, (int)length);
                         model.data = buffer.array();
                         byte action = actionBuff[0];
                         if (action == ActionCodes.GET_RESOLUTION) {
@@ -140,15 +148,15 @@ public class RemoteService implements Runnable {
                             ScreenModel smodel = new ScreenModel(model);
                             screenCallback.onScreenUpdated(smodel.bufferedBitmap);
                         }
-
-                        buffer = null;
+                        
+                        /*buffer = null;
                         data = null;
                         header = null;
                         actionBuff = null;
-                        lengthBuff = null;
+                        lengthBuff = null;*/
                     }
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Logger.getLogger(RemoteService.class.getName()).log(Level.SEVERE, null, ex);
 
             }

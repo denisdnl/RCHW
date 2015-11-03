@@ -205,9 +205,9 @@ public class MainClass extends JApplet {
                     @Override
                     public void onCursorLocation(MouseLocationModel mouseLocation) {
                             try {
-                            System.out.println("Mouse Location");
+                        //    System.out.println("Mouse Location: "+mouseLocation.X+" "+mouseLocation.Y);
                             Robot r = new Robot();
-                            r.mouseMove(mouseLocation.X, mouseLocation.Y);
+                         //   r.mouseMove(mouseLocation.X, mouseLocation.Y);
                         } catch (AWTException ex) {
                             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -285,6 +285,8 @@ public class MainClass extends JApplet {
                     @Override
                     public void onConnect() {
                         statusLabel.setText("Connected!");
+                        resolutionservice = new ResolutionService();
+                        resolutionservice.init();
                     }
 
                     @Override
@@ -303,8 +305,7 @@ public class MainClass extends JApplet {
                 
                 screenservice = new ScreenService();
                 screenservice.init();
-                resolutionservice = new ResolutionService();
-                resolutionservice.init();
+                
             }
         });
     }
