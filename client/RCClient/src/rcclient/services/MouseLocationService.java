@@ -39,7 +39,7 @@ public class MouseLocationService {
                    ResolutionConverter.convertToRemoteRes(p, panel.getWidth(), panel.getHeight());
                   
                    MouseLocationModel model = new MouseLocationModel(p.x,p.y);
-                   RemoteService.sendAction(model.toRawData());
+                //   RemoteService.sendAction(model.toRawData());
                     // System.out.println(p.x+" "+p.y);
                }
             }

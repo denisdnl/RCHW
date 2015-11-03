@@ -13,9 +13,9 @@ import rcserver.codes.ActionCodes;
  * @author Deni-W7
  */
 public class MouseScrollModel {
-    public static byte SCROLL_UP = 1;
-    public static byte SCROLL_DOWN = 2;
-    public static byte SCROLL_PRESS = 3;
+    public static final byte SCROLL_UP = 1;
+    public static final byte SCROLL_DOWN = 2;
+    public static final byte SCROLL_PRESS = 3;
     
     public byte action;
     public MouseScrollModel(RawDataModel model){

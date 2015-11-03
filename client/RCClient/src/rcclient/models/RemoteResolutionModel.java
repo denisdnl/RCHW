@@ -23,8 +23,8 @@ public class RemoteResolutionModel {
     
     public RemoteResolutionModel(RawDataModel model){
         ByteBuffer wbuffer = ByteBuffer.wrap(model.data,10,4);
-        ByteBuffer hbuffer = ByteBuffer.wrap(model.data,13,4);
-        
+        ByteBuffer hbuffer = ByteBuffer.wrap(model.data,14,4);
+
         width = wbuffer.getInt();
         height = hbuffer.getInt();
     }

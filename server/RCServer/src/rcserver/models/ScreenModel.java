@@ -26,7 +26,7 @@ public class ScreenModel {
     }
     
     public ScreenModel(RawDataModel model) throws IOException{
-        ByteBuffer lengthbuffer = ByteBuffer.wrap(model.data,3,8);
+        ByteBuffer lengthbuffer = ByteBuffer.wrap(model.data,2,8);
         long length = lengthbuffer.getLong();
         ByteBuffer imagebuffer = ByteBuffer.wrap(model.data,10, (int) length);
         
@@ -39,10 +39,9 @@ public class ScreenModel {
         RawDataModel result = new RawDataModel();
         
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(bufferedBitmap,"png", baos );
-        baos.flush();
+        ImageIO.write(bufferedBitmap,"jpg", baos );
         byte [] data = baos.toByteArray();
-        baos.close();
+
         ByteBuffer buffer = ByteBuffer.allocate(1+1+8+data.length);
         
         buffer.put(ActionCodes.HEADER_START);
@@ -51,7 +50,7 @@ public class ScreenModel {
         buffer.put(data);
         
         result.length = data.length;
-        result.data = buffer.array();
+        result.data = buffer.array(); 
         return result;
     }
 }

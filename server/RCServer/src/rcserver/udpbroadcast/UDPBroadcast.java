@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  * @author flash
  */
 public class UDPBroadcast implements Runnable {
+    public static final int LOCAL_PORT = 50021;
     public static final int PORT = 50020;
     private static DatagramSocket socket;
     private static Thread thread;
@@ -37,7 +38,7 @@ public class UDPBroadcast implements Runnable {
     public void singletonInit(InetAddress broadcastAddress, String message) throws SocketException, UnknownHostException{
         UDPBroadcast.message = message;
         if(socket == null) {
-            socket = new DatagramSocket(PORT);
+            socket = new DatagramSocket(LOCAL_PORT);
             socket.setBroadcast(true);
         }
         inetSocketAddress = new InetSocketAddress(broadcastAddress, PORT);

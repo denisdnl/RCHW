@@ -41,6 +41,20 @@ public class RemoteService implements Runnable {
 
     private static boolean isConnected = false;
     
+      public static void sendAction(RawDataModel model) {
+        if(!isStarted)
+            return ;
+        
+      
+        try {
+            if(outputStream != null)
+            outputStream.write(model.data);
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     @Override
     public void run() {
         Socket newClient = null;
@@ -66,7 +80,8 @@ public class RemoteService implements Runnable {
                 byte[] header = new byte[1];
                 try {
 //                    socketChannel.read(header);
-                    inputStream.read(header);
+                    int rd =inputStream.read(header);
+                    if(rd > 0)
                     if(header[0] == ActionCodes.HEADER_START) {
                         //yay, got data!
 //                        ByteBuffer actionBuff = ByteBuffer.allocate(1);
@@ -79,10 +94,15 @@ public class RemoteService implements Runnable {
                         
                         byte[] actionBuff = new byte[1];
                         inputStream.read(actionBuff);
+                        if (actionBuff[0] < 1 || actionBuff[0] > 10) {
+                            continue;
+                        }
+                        
                         byte[] lengthBuff = new byte[8];
                         inputStream.read(lengthBuff);
                         ByteBuffer lengthAuxBuffer = ByteBuffer.allocate(8);
                         lengthAuxBuffer.put(lengthBuff);
+                        lengthAuxBuffer.position(0);
                         long length = lengthAuxBuffer.getLong();
                         byte[] data = new byte[(int)length];
                         inputStream.read(data);
